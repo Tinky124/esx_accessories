@@ -1,10 +1,6 @@
-ESX								= nil
-local HasAlreadyEnteredMarker	= false
-local LastZone					= nil
-local CurrentAction				= nil
-local CurrentActionMsg			= ''
-local CurrentActionData			= {}
-local isDead					= false
+local hasAlreadyEnteredMarker, isDead, currentActionData = false, false, {}
+local lastZone, currentAction, currentActionMsg
+ESX = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -14,8 +10,7 @@ Citizen.CreateThread(function()
 end)
 
 function OpenAccessoryMenu()
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'set_unset_accessory',
-	{
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'set_unset_accessory', {
 		title = _U('set_unset'),
 		align = 'top-left',
 		elements = {
@@ -23,8 +18,7 @@ function OpenAccessoryMenu()
 			{label = _U('ears'), value = 'Ears'},
 			{label = _U('mask'), value = 'Mask'},
 			{label = _U('glasses'), value = 'Glasses'}
-		}
-	}, function(data, menu)
+	}}, function(data, menu)
 		menu.close()
 		SetUnsetAccessory(data.current.value)
 
@@ -73,15 +67,13 @@ function OpenShopMenu(accessory)
 
 		menu.close()
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm',
-		{
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
 			title = _U('valid_purchase'),
 			align = 'top-left',
 			elements = {
 				{label = _U('no'), value = 'no'},
 				{label = _U('yes', ESX.Math.GroupDigits(Config.Price)), value = 'yes'}
-			}
-		}, function(data, menu)
+		}}, function(data, menu)
 			menu.close()
 			if data.current.value == 'yes' then
 				ESX.TriggerServerCallback('esx_accessories:checkMoney', function(hasEnoughMoney)
@@ -187,7 +179,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(200)
@@ -214,7 +205,6 @@ Citizen.CreateThread(function()
 			HasAlreadyEnteredMarker = false
 			TriggerEvent('esx_accessories:hasExitedMarker', LastZone)
 		end
-
 	end
 end)
 
@@ -239,6 +229,5 @@ Citizen.CreateThread(function()
 				OpenAccessoryMenu()
 			end
 		end
-
 	end
 end)
