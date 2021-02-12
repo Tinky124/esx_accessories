@@ -127,7 +127,7 @@ end)
 -- Create Blips --
 CreateThread(function()
 	for k,v in pairs(Config.ShopsBlips) do
-		if v.Pos ~= nil then
+		if v.Pos then
 			for i=1, #v.Pos, 1 do
 				local blip = AddBlipForCoord(v.Pos[i])
 				SetBlipSprite (blip, v.Blip.sprite)
@@ -181,16 +181,16 @@ end)
 -- Key controls
 CreateThread(function()
 	while true do
-		Wait(1)
+		Wait(5)
 
 		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
-			if IsControlJustReleased(0, 38) and CurrentActionData.accessory then
+			if IsControlPressed(0,38) and CurrentActionData.accessory then
 				OpenShopMenu(CurrentActionData.accessory)
 				CurrentAction = nil
 			end
 		elseif CurrentAction and not Config.EnableControls then
-			Citizen.Wait(500)
+			Citizen.Wait(800)
 		end
 
 		if Config.EnableControls then
